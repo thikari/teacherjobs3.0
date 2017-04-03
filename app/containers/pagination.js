@@ -11,10 +11,11 @@ export default class Job extends Component {
     }
 
     handleItemClick(page) {
-        this.props.onPaginate(page);
+        //
+       this.props.onPaginate(page);
     }
 
-    render() {
+    render() { 
         return (
             <Pagination
                 activePage={this.props.pagination.currentPage}
