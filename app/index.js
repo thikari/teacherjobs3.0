@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './app';
 
 
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
@@ -12,15 +12,10 @@ import JobsContainer from "./containers/jobsContainer";
 
 ReactDOM.render((
     <Router history={hashHistory}>
-
-    <Route path="/" component={App}>
-
-    {/*add the routes here*/}
-    <Route path="/jobs" component={JobsContainer}/>
-    </Route>
-
+        <Route path="/" component={App}>
+            <Route path="/jobs" component={JobsContainer}/>
+        </Route>
     </Router>
-
 ),
 
 document.getElementById('root')

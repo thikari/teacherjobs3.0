@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import { Dropdown } from 'semantic-ui-react'
-import styled from 'styled-components';
-
-const Main = styled.div `
- width: 200px;
- float: left;
- margin-right: 2em;
-`;
+import { Dropdown, Grid } from 'semantic-ui-react'
 
 export default class Filters extends Component {
     constructor(props) {
@@ -23,39 +16,47 @@ export default class Filters extends Component {
                 { key: 'english', text: 'english', value: 'english' }
             ]
         };
+
+        //Bind fuctions correctly to this class
+        this.handleCategoryChange = this.handleChange.bind(this);
     }
 
-    handleChange(event) {
-        console.log(event.target.innerHTML);
+    handleChange(e, { value }) {
+        console.log(value);
     }
 
     render() {
         return (
-            <div>
-                <Main>
-                    <Dropdown
-                        placeholder='Select Country'
-                        fluid
-                        search
-                        selection
-                        options={this.state.countryOptions} />
-                </Main>
-
-                <Main>
-                    <Dropdown placeholder='State' search selection options={this.state.stateOptions} />
-                </Main>
-
-                <Main>
-                    <Dropdown
-                        placeholder='Skills'
-                        fluid
-                        multiple
-                        selection
-                        options={this.state.categories}
-                        onChange={this.handleChange.bind(this)}
-                    />
-                </Main>
-            </div>
+            <Grid columns={3}>
+                <Grid.Row>
+                    <Grid.Column>
+                        <Dropdown
+                            placeholder='Select Country'
+                            fluid
+                            search
+                            selection
+                            options={this.state.countryOptions} />
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Dropdown
+                             placeholder='State'
+                             search 
+                             fluid
+                             selection 
+                             options={this.state.stateOptions} />
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Dropdown
+                            placeholder='Skills'
+                            fluid
+                            multiple
+                            selection
+                            options={this.state.categories}
+                            onChange={this.handleChange}
+                        />
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
         );
     }
 }

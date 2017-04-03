@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 
-const Main = styled.div `
- width: 100%;
- margin-bottom: 1em;
- padding: 1em;
-`;
-
+require("../styles/job.less");
 export default class Job extends Component {
     constructor(props) {
         super(props);
@@ -15,9 +9,12 @@ export default class Job extends Component {
 
     render() {
         return (
-            <Main>
+            <div className="job-container">
+                <h3 className="title">
+                   This is a job title 
+                </h3>
                 <p>{ this.props.data.description }</p>
-            </Main>
+            </div>
         );
     }
 }
