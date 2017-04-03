@@ -11,7 +11,6 @@ export default class Job extends Component {
     }
 
     handleItemClick(page) {
-        //
        this.props.onPaginate(page);
     }
 
