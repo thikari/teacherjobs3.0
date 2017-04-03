@@ -14,7 +14,6 @@ export default class Job extends Component {
         this.props.onPaginate(page);
     }
 
-
     render() {
         return (
             <Pagination

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dropdown, Grid } from 'semantic-ui-react'
+import { Dropdown, Grid } from 'semantic-ui-react';
 
 export default class Filters extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ export default class Filters extends Component {
         };
 
         //Bind fuctions correctly to this class
-        this.handleCategoryChange = this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(e, { value }) {
@@ -39,7 +39,7 @@ export default class Filters extends Component {
                     </Grid.Column>
                     <Grid.Column>
                         <Dropdown
-                             placeholder='State'
+                             placeholder='Select State'
                              search 
                              fluid
                              selection 
@@ -47,7 +47,7 @@ export default class Filters extends Component {
                     </Grid.Column>
                     <Grid.Column>
                         <Dropdown
-                            placeholder='Skills'
+                            placeholder='Select Categories'
                             fluid
                             multiple
                             selection
