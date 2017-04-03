@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
@@ -23,17 +25,6 @@ function initDatabase(cb) {
     });
 }
 
-
-
-//const server = app.listen(3000, function() {
-//    const host = server.address().address;
-//    const port = server.address().port;
-//    console.log('Example app listening at http://%s:%s', host, port);
-//});
-
-'use strict';
-
-
 // This is the function that starts our main express server
 function bootstrapApp(database) {
     let crawlers = require('./server/crawlers')(database);
@@ -41,8 +32,6 @@ function bootstrapApp(database) {
     app.use(methodOverride('_method'));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-
-
 
     app.use(webpackDevMiddleware(compiler, {
         hot: true,
@@ -62,7 +51,6 @@ function bootstrapApp(database) {
         console.log('Example app listening on port 2400!');
     });
 }
-
 
 // lets initialize our database
 initDatabase(bootstrapApp);
