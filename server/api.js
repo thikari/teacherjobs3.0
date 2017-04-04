@@ -6,98 +6,78 @@ module.exports = (database) => {
     const JobList = database.model('JobList');
 
     // get offset
-    function getOffset(pageNum, pageSize) {
-        return (pageNum * pageSize) - pageSize;
+    function getOffset(page, pageSize) {
+        return (page * pageSize) - pageSize;
     }
 
-    //the logic for the filtering your database
-    function buildFilterQuery(filters) {
+    // build query
+    function buildQuery(params) {
         let query = {};
-        if(filters.categories) {
-            query.category = {
-                "$in": filters.categories
+        if(params.categories) {
+            if(params.categories !== '[]') {
+                query.category = {
+                    "$in": JSON.parse(params.categories)
+                }
             }
         }
-        if(filters.location) {
-
-            if(filters.location.country) {
-                query.country = filters.location.country;
-            }
-            if(filters.location.city) {
-                query.city = filters.location.city;
-            }
+        if(params.country) {
+            query.country = params.country;
+        }
+        if(params.city) {
+            query.city = params.city;
         }
 
         return query;
     }
 
-    router.route('/')
+    // returns the length of items that matches the filters without pagination
+    function getJobsLength(params, cb) {
+        let query = buildQuery(params);
+        JobList.find(query).count((err, result) => {
+            if(err) {
+                cb(err);
+            } else {
+                cb(null, result);
+            }
+        });
+    }
+    
+    /**
+      * This endpoint returns jobs that matches the filter criteria provided in the query params
+      */
+    router.route('/jobs')
         .get((req, res) => {
-            JobList.find({ }).toArray((err, results) => {
-                if(err) {
-                    res.status(500).send({ msg: 'There was an error getting data'});
-                } else {
-                    res.status(200).send(results);
-                }
-            });
+           if(!req.query.pageSize) {
+               req.query.pageSize = 20;
+           }
+            if(!req.query.page) {
+               req.query.page = 1;
+           }
+           
+           getJobsLength(req.query, (err, length) => {
+               let query = buildQuery(req.query);
+                   JobList.find(query)
+                   .limit(req.query.pageSize*1 || 0)
+                   .skip(getOffset(req.query.page, req.query.pageSize))
+                   .toArray((err, results) => {
+                        if(err) {
+                            res.status(500).send('Cannot get jobs');
+                        } else {
+                            res.status(200).send({ 
+                                data: results,
+                                filteredDataSize: length
+                            });
+                        }
+                    });
+           });
         });
-
-    router.route('/filter')
-        .post((req, res) => {
-            let filter = JSON.parse(req.body.filters);
-            console.log(filter);
-            JobList
-                .find(buildFilterQuery(filter))
-                .toArray((err, results) => {
-                    if(err) {
-
-                        res.status(500).send({ msg: 'There was an error filtering data'});
-                    } else {
-                        res.status(200).send(results);
-                    }
-                });
-
+    
+    // This end points returns the filters data for countries, cities and categories
+    // in the database
+    router.route('/filters')
+        .get((req, res) => {
+            // @TODO
         });
-
-    router.route('/totaljob')
-        .post((req, res) => {
-            let filter = JSON.parse(req.body.filters);
-            JobList.find(buildFilterQuery(filter)).toArray((err, results) => {
-                if(err) {
-                    res.status(200).send({ size: 0 });
-                } else {
-                    res.status(200).send({ size: results.length });
-                }
-            });
-        });
-
-    //the logic for limiting page items/ site
-    router.route('/paginate')
-        .post((req, res) => {
-            let pageSize = 20;
-            let filter = JSON.parse(req.body.filters);
-            let pageNum = JSON.parse(req.body.page) || 1;
-            let offset = getOffset(pageNum, pageSize);
-
-            console.log(filter);
-            console.log(pageNum)
-            console.log(offset)
-
-            JobList
-                .find(buildFilterQuery(filter))
-                .limit(pageSize)
-                .skip(offset)
-                .toArray((err, results) => {
-                    if(err) {
-
-                        res.status(500).send({ msg: 'There was an error filtering data'});
-                    } else {
-                        res.status(200).send(results);
-                    }
-                });
-
-        });
-
 
     // exports this routes
     return router;

@@ -22,6 +22,7 @@ export default class JobsContainer extends Component {
                 },
                 pagination: {
                     currentPage: 1,
+                    pageSize: 10,
                     totalPages: 2
                 }
             }
