@@ -57,7 +57,7 @@ module.exports = (database) => {
            getJobsLength(req.query, (err, length) => {
                let query = buildQuery(req.query);
                    JobList.find(query)
-                   .limit(req.query.pageSize || 0)
+                   .limit(req.query.pageSize*1 || 0)
                    .skip(getOffset(req.query.page, req.query.pageSize))
                    .toArray((err, results) => {
                         if(err) {
