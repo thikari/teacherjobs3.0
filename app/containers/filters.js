@@ -21,13 +21,13 @@ export default class Filters extends Component {
     componentDidMount() {
         jobsService.getFilterObj((err, data) => {
             if(data) {
-                console.log('filters loaded');
                 this.countryCitymap = data.countryCitymap;
                 let countries = Object.keys(data.countryCitymap);
                 let cities = data.countryCitymap[countries[0]];
                 let categories = data.categories;
 
                 this.updateFilters(countries, cities, categories);
+                this.props.onFiltersLoaded();
             } else {
                 alert('Could not setup filters options');
             }

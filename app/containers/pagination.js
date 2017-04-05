@@ -17,9 +17,9 @@ export default class Job extends Component {
     render() { 
         return (
             <Pagination
-                activePage={this.props.pagination.currentPage}
-                itemsCountPerPage={20}
-                totalItemsCount={this.props.pagination.totalPages * 20}
+                activePage={this.props.pagination.page}
+                itemsCountPerPage={this.props.pagination.pageSize}
+                totalItemsCount={this.props.pagination.totalItems}
                 pageRangeDisplayed={5}
                 onChange={this.handleItemClick}
             />

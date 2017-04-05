@@ -83,7 +83,7 @@ module.exports = (database) => {
            getJobsLength(req.query, (err, length) => {
                let query = buildQuery(req.query);
                    JobList.find(query)
-                   .limit(req.query.pageSize*1 || 0)
+                   .limit(parseInt(req.query.pageSize))
                    .skip(getOffset(req.query.page, req.query.pageSize))
                    .toArray((err, results) => {
                         if(err) {
@@ -104,6 +104,7 @@ module.exports = (database) => {
             console.log('filters called');
             JobList.find({ }).toArray((err, results) => {
                 if(err) {
+                    console.log(err);
                     res.status(500).send('Cannot get filters data');
                 } else {
                     res.status(200).send({
