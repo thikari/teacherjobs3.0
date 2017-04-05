@@ -19,6 +19,7 @@
     "body-parser": "^1.17.1",
     "bootstrap": "^3.3.7",
     "express": "^4.15.2",
+    "isomorphic-fetch": "^2.2.1",
     "method-override": "^2.3.8",
     "mongodb": "^2.2.25",
     "osmosis": "^1.1.2",
