@@ -41,10 +41,36 @@ module.exports = (database) => {
             }
         });
     }
+
+    // This method gets the mapping between the countries and their associated cities
+    function getCountryCityMap(jobs) {
+        let result = {};
+        jobs.forEach((job) => {
+            if(result[job.country]) {
+                if(result[job.country].indexOf(job.city) < 0) {
+                    result[job.country].push(job.city);
+                }
+            } else {
+                result[job.country] = [];
+                result[job.country].push(job.city);
+            }
+        });
+
+        return result;
+    }
+
+    // This method gets the mapping between the countries and their associated cities
+    function getCategories(jobs) {
+        let result = {};
+        jobs.forEach((job) => {
+            job.category.forEach((item) => {
+                result[item] = '_';
+            });
+        });
+        return Object.keys(result);
+    }
     
-    /**
-      * This endpoint returns jobs that matches the filter criteria provided in the query params
-      */
+    // This endpoint returns jobs that matches the filter criteria provided in the query params    
     router.route('/jobs')
         .get((req, res) => {
            if(!req.query.pageSize) {
@@ -72,11 +98,20 @@ module.exports = (database) => {
            });
         });
     
-    // This end points returns the filters data for countries, cities and categories
-    // in the database
+    // This end points returns the filters for countries, cities and categories
     router.route('/filters')
         .get((req, res) => {
-            // @TODO
+            console.log('filters called');
+            JobList.find({ }).toArray((err, results) => {
+                if(err) {
+                    res.status(500).send('Cannot get filters data');
+                } else {
+                    res.status(200).send({
+                        countryCitymap: getCountryCityMap(results),
+                        categories: getCategories(results)
+                    });
+                }
+            });
         });
 
     // exports this routes

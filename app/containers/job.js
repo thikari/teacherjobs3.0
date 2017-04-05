@@ -4,7 +4,6 @@ require("../styles/job.less");
 export default class Job extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
     }
 
     render() {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Filters from './filters.js';
 import Jobs  from './jobs.js';
 import Pagination from './pagination.js';
+import jobsService from '../services/jobs.js';
 
 require("../styles/jobs-container.less");
 export default class JobsContainer extends Component {
@@ -46,10 +47,10 @@ export default class JobsContainer extends Component {
         console.log(page);
     }
 
-    onFilter(filtersObj) {
+    onFilter(value, type) {
         // Updates pageInfo
         // getJobs from server
-        console.log(data);
+        console.log(value, type);
     }
 
     render() {
