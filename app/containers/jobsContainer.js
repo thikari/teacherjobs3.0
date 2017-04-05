@@ -10,11 +10,7 @@ export default class JobsContainer extends Component {
         super(props);
 
         this.state = {
-            jobs: [
-                { description: 'here is a job'},
-                { description: 'here is a job1'},
-                { description: 'here is a job2'}
-            ],
+            jobs: [],
             pageInfo: {
                 filters: {
                     country: '',
@@ -48,7 +44,6 @@ export default class JobsContainer extends Component {
         jobsService.getJobs(this.state.pageInfo, (err, result) => {
             if(result) {
                 console.log('jobs loaded');
-                console.log(result);
                 // update state with jobs 
                 const newState = Object.assign({}, this.state);
                 newState.jobs = result.data;
@@ -61,9 +56,12 @@ export default class JobsContainer extends Component {
     }
 
     onPaginate(page) {
-        // Updates pageInfo
-        // getJobs from server
+        // Updates pageInfo then getJobs from server
         console.log(page);
+        const newState = Object.assign({}, this.state);
+        newState.pageInfo.pagination.page = page;
+        this.setState(newState);
+        this.getJobs();
     }
 
     onFilter(value, type) {
