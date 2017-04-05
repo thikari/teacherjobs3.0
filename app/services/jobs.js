@@ -25,6 +25,7 @@ function getFilterObj(callback) {
 
 // This methods gets jobs from the server
 function getJobs(pageInfo, callback) {
+    console.log(pageInfo);
     fetch(buildJobsUrl(pageInfo), {
         method: 'GET',
         headers: {
@@ -48,14 +49,14 @@ function getJobs(pageInfo, callback) {
 
 //This method builds the url for getting jobs
 function buildJobsUrl(pageInfo) {
-    let baseUrl = '/api/jobs';
+    let baseUrl = '/api/jobs?';
 
     //Append filters query to the end of the url
     Object.keys(pageInfo.filters).forEach((filterKey) => {
         if(filterKey == 'categories') {
             pageInfo.filters[filterKey] = JSON.stringify(pageInfo.filters[filterKey]);
         }
-        let query = `?${filterKey}=${pageInfo.filters[filterKey]}&`;
+        let query = `${filterKey}=${pageInfo.filters[filterKey]}&`;
         baseUrl += query;
     });
 
@@ -64,7 +65,7 @@ function buildJobsUrl(pageInfo) {
 
     //append pagination query to the url stringify
     Object.keys(pageInfo.pagination).forEach((key) => {
-        if(key != 'totalPages') {
+        if(key != 'totalItems') {
             let query = `&${key}=${pageInfo.pagination[key]}`;
             baseUrl += query;
         }

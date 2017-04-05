@@ -41,9 +41,10 @@ export default class JobsContainer extends Component {
     // The filters are read from the stateObject
     // When data is returned, the page
     getJobs() {
-        jobsService.getJobs(this.state.pageInfo, (err, result) => {
+        jobsService.getJobs(JSON.parse(JSON.stringify(this.state.pageInfo)), (err, result) => {
             if(result) {
                 console.log('jobs loaded');
+                console.log(result);
                 // update state with jobs 
                 const newState = Object.assign({}, this.state);
                 newState.jobs = result.data;

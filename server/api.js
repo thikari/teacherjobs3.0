@@ -14,9 +14,9 @@ module.exports = (database) => {
     function buildQuery(params) {
         let query = {};
         if(params.categories) {
-            if(params.categories !== '[]') {
+            if(params.categories.length > 0) {
                 query.category = {
-                    "$in": JSON.parse(params.categories)
+                    "$in": params.categories
                 }
             }
         }
@@ -26,13 +26,12 @@ module.exports = (database) => {
         if(params.city) {
             query.city = params.city;
         }
-
+        
         return query;
     }
 
     // returns the length of items that matches the filters without pagination
-    function getJobsLength(params, cb) {
-        let query = buildQuery(params);
+    function getJobsLength(query, cb) {
         JobList.find(query).count((err, result) => {
             if(err) {
                 cb(err);
@@ -73,21 +72,26 @@ module.exports = (database) => {
     // This endpoint returns jobs that matches the filter criteria provided in the query params    
     router.route('/jobs')
         .get((req, res) => {
+          
            if(!req.query.pageSize) {
                req.query.pageSize = 20;
            }
-            if(!req.query.page) {
+           if(!req.query.page) {
                req.query.page = 1;
            }
            
-           getJobsLength(req.query, (err, length) => {
-               let query = buildQuery(req.query);
-                   JobList.find(query)
+           let categoriesStr = req.query.categories;
+           req.query.categories = JSON.parse(categoriesStr);
+
+           let query = buildQuery(req.query);
+           getJobsLength(query, (err, length) => {
+               JobList.find(query)
                    .limit(parseInt(req.query.pageSize))
                    .skip(getOffset(req.query.page, req.query.pageSize))
                    .toArray((err, results) => {
                         if(err) {
-                            res.status(500).send('Cannot get jobs');
+                            console.log(err);
+                            throw new Error('Cannot connect to the database');
                         } else {
                             res.status(200).send({ 
                                 data: results,
@@ -101,11 +105,10 @@ module.exports = (database) => {
     // This end points returns the filters for countries, cities and categories
     router.route('/filters')
         .get((req, res) => {
-            console.log('filters called');
             JobList.find({ }).toArray((err, results) => {
                 if(err) {
                     console.log(err);
-                    res.status(500).send('Cannot get filters data');
+                    throw new Error('Cannot connect to the database');
                 } else {
                     res.status(200).send({
                         countryCitymap: getCountryCityMap(results),
