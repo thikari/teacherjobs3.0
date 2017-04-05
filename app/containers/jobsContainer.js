@@ -65,9 +65,10 @@ export default class JobsContainer extends Component {
     }
 
     onFilter(value, type) {
-        // Updates pageInfo
-        // getJobs from server
-        console.log(value, type);
+        const newState = Object.assign({}, this.state);
+        newState.pageInfo.filters[type] = value;
+        this.setState(newState);
+        this.getJobs();
     }
 
     render() {
